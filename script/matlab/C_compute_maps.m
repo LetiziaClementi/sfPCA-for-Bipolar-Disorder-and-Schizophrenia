@@ -8,22 +8,23 @@ close all
 clc
 
 %%
-cd 'C:\Users\letcle\Documents\WORK\UCLA_WORK\script'
+cd '~/OneDrive - Politecnico di Milano/PhD.LAVORO/3zo_anno/sfPCA_BIP_SCHZ/script/matlab'
+path_file = 'D:\ds000030_fmriprep'; %aggiornare indirizzo LaCie in base a computer
+
 %%
-path_atlas = strcat('../data/Hammers_mith_atlas_n30r83_delivery_Dec16/');
-path_data = '../data/';
+path_atlas = fullfile('..', '..','data', 'Hammers_mith_atlas_n30r83_delivery_Dec16');
+path_data = fullfile('..', 'data');
 
-path_roi = strcat(path_atlas, 'n30r83_names_Excel.xlsx');
-path_maps = strcat('../maps/');
+path_roi = fullfile(path_atlas, 'n30r83_names_Excel.xlsx');
+path_maps = fullfile('..','..', 'maps');
 
-path_file = 'D:\ds000030_fmriprep';
 directorycontent = dir(path_file);
 
 %% import mesh
-nodes = readmatrix('../data/mesh/node_spaziodati_onlygm.csv');
-elem = readmatrix('../data/mesh/elem_onlygm.csv'); %la 5ta colonna in realtà nonn serve, sono solo 4
-labels = (readmatrix('../data/mesh/labels_onlygm.csv'))';
-participants = readtable('../data/participants.csv');
+nodes = readmatrix(fullfile('..', '..', 'data','mesh', 'node_spaziodati_onlygm.csv'));
+elem = readmatrix(fullfile('..', '..', 'data','mesh', 'elem_onlygm.csv')); %la 5ta colonna in realtà nonn serve, sono solo 4
+labels = (readmatrix(fullfile('..', '..', 'data','mesh', 'labels_onlygm.csv')))';
+participants = readtable(fullfile('..', '..', 'data','participants.csv'));
 %%
 [~,region_names]  = xlsread(path_roi,'A3:A85');
 
