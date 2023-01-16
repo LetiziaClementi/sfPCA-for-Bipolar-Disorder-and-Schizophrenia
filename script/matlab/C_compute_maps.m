@@ -8,7 +8,7 @@ close all
 clc
 
 %%
-cd '~/OneDrive - Politecnico di Milano/PhD.LAVORO/3zo_anno/sfPCA_BIP_SCHZ/script/matlab'
+cd 'C:\Users\letcle\Documents\WORK\sfPCA-for-Bipolar-Disorder-and-Schizophrenia\script\matlab'
 path_file = 'D:\ds000030_fmriprep'; %aggiornare indirizzo LaCie in base a computer
 
 %%
@@ -17,6 +17,7 @@ path_data = fullfile('..', 'data');
 
 path_roi = fullfile(path_atlas, 'n30r83_names_Excel.xlsx');
 path_maps = fullfile('..','..', 'maps');
+path_participants = fullfile('..','..', 'participants');
 
 directorycontent = dir(path_file);
 
@@ -40,9 +41,9 @@ band = [F_cut Fs];
 
 
 %% temporary regions selected
-
-for r=61:63
-    
+   
+for r=59:63
+    tic 
     ROI_name = region_names{r}
     ROI_id = find(strcmp(region_names,'PL_postce_G_l_sum' ));
     ROI_nodes = find(labels == ROI_id); %vediamo
@@ -95,5 +96,6 @@ for r=61:63
     
     z_maps_task = 0.5 * (log(1+r_maps_task) - log(1-r_maps_task));
     writematrix(z_maps_task, fullfile(path_maps, strcat('z_maps_', ROI_name, '.csv')));
-    writetable(part_ofinterest, fullfile(path_maps, strcat('part_ofinterest_', ROI_name, '.csv')));
+    writetable(part_ofinterest, fullfile(path_participants, strcat('part_ofinterest_', ROI_name, '.csv')));
+    toc
 end

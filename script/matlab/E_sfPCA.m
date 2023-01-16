@@ -3,7 +3,7 @@ clc
 close all
 %% cambiare in base al computer in uso
 
-cd '~/OneDrive - Politecnico di Milano/PhD.LAVORO/3zo_anno/sfPCA_BIP_SCHZ/script/matlab'
+cd 'C:\Users\letcle\Documents\WORK\sfPCA-for-Bipolar-Disorder-and-Schizophrenia\script\matlab'
 path_file = 'D:\ds000030_fmriprep'; %aggiornare indirizzo LaCie in base a computer
 
 %% set paths
@@ -23,17 +23,21 @@ stiff = spconvert(readmatrix(fullfile('..', '..', 'data', 'stiff.txt')));
 
 maps_avail = dir(path_maps);
 [~,region_names]  = xlsread(path_roi,'A3:A85');
-selected_rois = region_names(3:4); %si potrebbe prendere da maps avail e migliorare
+%selected_rois = region_names(3:4); %si potrebbe prendere da maps avail e migliorare
 
 % Define parameters sequence
 Kfolds = 5; 
 niter = 20; 
 loglambdaseq = -3:1:3; 
 N_PC = 5; 
+%%
+selected_rois = erase({maps_avail(3:size(maps_avail,1)).name}, '.csv');
+selected_rois = erase(selected_rois, 'z_maps_')
 
 %% meglio iterare su ROI per univocità
-for r=1:size(selected_rois,1)
-    
+for r=3:size(selected_rois,2)
+    tic
+    fprintf(strcat('\n%%%%%%%%', selected_rois{r}, '%%%%%%%%\n'))
     %import map
     map = readmatrix(fullfile(path_maps,['z_maps_', selected_rois{r}, '.csv'])); % problema permessi matlab soliti
     participants = readtable(fullfile(path_participants,['part_ofinterest_', selected_rois{r}, '.csv']));
@@ -50,7 +54,7 @@ for r=1:size(selected_rois,1)
     mean_map = mean(map);
     map_0 = map - ones(size(map,1),1)*mean_map;
     
-    %% Computation of the first N_PC PC function
+    % Computation of the first N_PC PC function
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% Computation of first n PC %%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -60,8 +64,8 @@ for r=1:size(selected_rois,1)
     F_not_normalized = zeros(N_PC, size(map_0,2)); 
     U_normalized = zeros(size(map_0,1), N_PC); 
 
-    optimal_lambdas_indices = zeros(map_PC,1); 
-    CV_tokeep = zeros(map_PC,size(loglambdaseq,2));
+    optimal_lambdas_indices = zeros(N_PC,1); 
+    CV_tokeep = zeros(N_PC,size(loglambdaseq,2));
 
     X_residuals = map_0;
     for k = 1:N_PC
@@ -77,7 +81,7 @@ for r=1:size(selected_rois,1)
         X_residuals = X_residuals - (U_normalized(:,k) * F_not_normalized(k,:));
     end
     
-    %% Computation scores
+    % Computation scores
     %%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% Computation scores %%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -94,10 +98,10 @@ for r=1:size(selected_rois,1)
     end
     
     [Q,R] = qr(U_not_normalized);
-    explained_var = diag(R).^2/(size(X_0,1));
+    explained_var = diag(R).^2/(size(map_0,1));
     trace(U_not_normalized' * U_not_normalized)
     fig = plot(explained_var,'b--o');
-    saveas(fig, fullfile('..', '..', 'plot', 'cumsum_variance', ['cumsumvariance_', selected_rois{r}, '.pdf']))
+    saveas(fig, fullfile('..', '..', 'plots', 'cumsum_variance', ['cumsumvariance_', selected_rois{r}, '.pdf']))
     
     X_0_clean = map_0;
     X_0_clean(isnan(map_0))=0;
@@ -109,8 +113,15 @@ for r=1:size(selected_rois,1)
     total_var = trace(U_ALL' * U_ALL)/(size(X_0_clean,1));
 
     
-    writematrix()
+    writematrix(F_normalized, fullfile('..','..', 'results', [selected_rois{r}, '_F_normalized.csv']));
+    writematrix(U_normalized, fullfile('..','..', 'results', [selected_rois{r}, '_U_normalized.csv']));
+    writematrix(F_not_normalized, fullfile('..','..', 'results', [selected_rois{r}, '_F_not_normalized.csv']));
+    writematrix(U_not_normalized, fullfile('..','..', 'results', [selected_rois{r}, '_U_not_normalized.csv']));
+    writematrix(CV_tokeep, fullfile('..','..', 'results', [selected_rois{r}, '_CV.csv']));
+    writematrix(cumsum(explained_var)./total_var, fullfile('..','..', 'results', [selected_rois{r}, '_exp_var.csv']));
     
+
+    toc
 end
 
 

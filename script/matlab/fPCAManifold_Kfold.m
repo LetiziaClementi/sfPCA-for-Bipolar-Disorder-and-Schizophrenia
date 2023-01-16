@@ -1,4 +1,4 @@
-function [CVseq] = fPCAManifold_Kfold(X, mass, stiff, loglambdaseq, K, n_iter, indices_NAN)
+50function [CVseq] = fPCAManifold_Kfold(X, mass, stiff, loglambdaseq, K, n_iter, indices_NAN)
     
   X_clean = X;
   X_clean(:,indices_NAN) = [];

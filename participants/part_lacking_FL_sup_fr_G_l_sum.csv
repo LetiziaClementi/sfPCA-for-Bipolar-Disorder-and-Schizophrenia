@@ -1,0 +1,6 @@
+participant_id,diagnosis,age,gender,bart,bht,dwi,pamenc,pamret,rest,scap,stopsignal,T1w,taskswitch,ScannerSerialNumber,ghost_NoGhost
+sub-10299,CONTROL,25,M,NaN,1,NaN,NaN,NaN,1,1,1,NaN,NaN,35343,ghost
+sub-10428,CONTROL,25,F,NaN,1,NaN,NaN,NaN,1,1,1,NaN,1,35343,ghost
+sub-10501,CONTROL,21,F,NaN,1,NaN,NaN,NaN,1,1,1,NaN,1,35343,ghost
+sub-10971,CONTROL,27,F,NaN,1,NaN,NaN,NaN,1,1,1,NaN,1,35343,ghost
+sub-11121,CONTROL,25,M,NaN,1,NaN,NaN,NaN,1,1,1,NaN,1,35426,ghost
