@@ -42,10 +42,11 @@ band = [F_cut Fs];
 
 %% temporary regions selected
    
-for r=59:63
+for r=3:4
     tic 
     ROI_name = region_names{r}
-    ROI_id = find(strcmp(region_names,'PL_postce_G_l_sum' ));
+    
+    ROI_id = find(strcmp(region_names, ROI_name));
     ROI_nodes = find(labels == ROI_id); %vediamo
     
     fprintf(strcat('\n%%%%%%%%', ROI_name, '%%%%%%%%\n'))
@@ -60,7 +61,9 @@ for r=59:63
         name_task = strcat(part_ofinterest.participant_id(i),desinenza_task);
         
         try
-            task = niftiread(char(strcat(path_file,'\', part_ofinterest.participant_id(i),'\func\', name_task)));
+            %task = niftiread(char(strcat(path_file,'\', part_ofinterest.participant_id(i),'\func\', name_task)));
+            task = niftiread(char(fullfile(path_file, part_ofinterest.participant_id(i),'func', name_task)));
+            
             
             task_unrolled = zeros(size(nodes,1), size(task,4));
             for j=1:size(nodes,1)
@@ -90,7 +93,7 @@ for r=59:63
         end
         
         % print per verifica
-        fprintf("completed: %s, n %d/%d \n", char(part_ofinterest.participant_id(i)), i, nsbj)
+        %fprintf("completed: %s, n %d/%d \n", char(part_ofinterest.participant_id(i)), i, nsbj)
     end
     %TIME : ~30 sec each
     
